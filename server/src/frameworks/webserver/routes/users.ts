@@ -9,6 +9,8 @@ const userRouter = () =>{
 
     router.post('/save',controller.addUser)
     router.get('/list',controller.findAllUsers)
+    router.put('/update/:userId',controller.updateUser)
+    router.delete('/delete/:userId',controller.deleteUser)
 
     return router
 }

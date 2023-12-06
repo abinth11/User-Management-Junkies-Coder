@@ -13,11 +13,36 @@ function UsersPage({}: Props) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<IUser | null>(null);
   const [editMode, setEditMode] = useState<boolean>(false);
-  const handleEdit = (id: string) => {
-  };
-  const handleDelete = (id: string) => {};
+  const [updated, setUpdated] = useState<boolean>(false);
   const api = new UserApi();
+  const handleEdit = (user: IUser) => {
+    setEditMode(true);
+    setCurrentUser(user);
+    setOpenModal(true);
+  };
 
+  const handleButtonAdd = () => {
+    setCurrentUser(null);
+    setEditMode(false)
+    setOpenModal(true);
+  };
+  const handleDelete = (user: IUser) => {
+    api
+      .deleteUser(user._id as string)
+      .then((res) => {
+        toast.success("successfully deleted user" as string, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 3000,
+        });
+        setUpdated(!updated)
+      })
+      .catch((err) => {
+        toast.error(err.message as string, {
+          position: toast.POSITION.BOTTOM_RIGHT,
+          autoClose: 3000,
+        });
+      });
+  };
 
   const fetchData = () => {
     api
@@ -31,7 +56,7 @@ function UsersPage({}: Props) {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [updated]);
 
   return (
     <div className='p-32'>
@@ -41,9 +66,11 @@ function UsersPage({}: Props) {
         currentUser={currentUser}
         setCurrentUser={setCurrentUser}
         editUser={editMode}
+        updated={updated}
+        setUpdated={setUpdated}
       />
       <div className='flex justify-end'>
-        <Button setOpenModal={setOpenModal} />
+        <Button handleButtonAdd={handleButtonAdd} />
       </div>
       <div className='mt-5'>
         <UserTable

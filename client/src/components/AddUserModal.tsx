@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ClipLoader } from "react-spinners";
 // @ts-ignore
 import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
@@ -13,6 +13,8 @@ type Props = {
   currentUser: IUser | null;
   setCurrentUser: (topic: IUser | null) => void;
   editUser: boolean;
+  updated: boolean;
+  setUpdated: (val: boolean) => void;
 };
 
 const AddUserModal: React.FC<Props> = ({
@@ -20,24 +22,22 @@ const AddUserModal: React.FC<Props> = ({
   setIsModalOpen,
   currentUser,
   setCurrentUser,
+  updated,
+  setUpdated,
   editUser,
 }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const userApi = new UserApi();
+  console.log(currentUser);
   const initialValues = {
-    name: "",
-    email: "",
-    title: "",
-    role: "",
+    name: currentUser?.name || "",
+    email: currentUser?.email || "",
+    title: currentUser?.title || "",
+    role: currentUser?.role || "",
   };
 
-  //   useEffect(() => {
-  //     setTitle(currentTopic?.title ?? "");
-  //     setSummary(currentTopic?.summary ?? "");
-  //   }, [currentTopic]);
-
   const handleCancel = () => {
-    // setCurrentTopic(null);
+    setCurrentUser(null);
     setIsModalOpen(false);
   };
 
@@ -46,25 +46,47 @@ const AddUserModal: React.FC<Props> = ({
     { resetForm }: FormikHelpers<IUser>
   ) => {
     setConfirmLoading(true);
-    userApi
-      .saveUser(values)
-      .then((res) => {
-        console.log(res);
-        setConfirmLoading(false);
-        setIsModalOpen(false);
-        toast.success("successfully added new user" as string, {
+    if (editUser) {
+      userApi
+        .updateUser(currentUser?._id as string,values)
+        .then((res) => {
+          setConfirmLoading(false);
+          setIsModalOpen(false);
+          toast.success("successfully updated user" as string, {
             position: toast.POSITION.BOTTOM_RIGHT,
             autoClose: 3000,
           });
-        resetForm();
-      })
-      .catch((res) => {
-        setConfirmLoading(false);
-        toast.error(res.message as string, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: 3000,
+          resetForm();
+          setUpdated(!updated);
+        })
+        .catch((res) => {
+          setConfirmLoading(false);
+          toast.error(res.message as string, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+          });
         });
-      });
+    } else {
+      userApi
+        .saveUser(values)
+        .then((res) => {
+          setConfirmLoading(false);
+          setIsModalOpen(false);
+          toast.success("successfully added new user" as string, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+          });
+          resetForm();
+          setUpdated(!updated);
+        })
+        .catch((res) => {
+          setConfirmLoading(false);
+          toast.error(res.message as string, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+            autoClose: 3000,
+          });
+        });
+    }
   };
 
   return (
@@ -111,6 +133,7 @@ const AddUserModal: React.FC<Props> = ({
               initialValues={initialValues}
               validationSchema={userValidationSchema}
               onSubmit={handleFormSubmit}
+              enableReinitialize={true}
             >
               <Form>
                 <div className='p-5 w-full '>
