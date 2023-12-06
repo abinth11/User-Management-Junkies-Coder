@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ClipLoader } from "react-spinners";
 // @ts-ignore
 import { Formik, Field, Form, ErrorMessage, FormikHelpers } from "formik";
-import { IUser } from "../../types/user";
+import { IUser } from "../types/user";
 import { userValidationSchema } from "../validations/user";
 import UserApi from "../api/api-impl";
 import { toast } from "react-toastify";
@@ -28,7 +28,6 @@ const AddUserModal: React.FC<Props> = ({
 }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const userApi = new UserApi();
-  console.log(currentUser);
   const initialValues = {
     name: currentUser?.name || "",
     email: currentUser?.email || "",

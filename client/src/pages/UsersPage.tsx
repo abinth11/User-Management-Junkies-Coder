@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../components/Table";
-import { IUser } from "../../types/user";
+import { IUser } from "../types/user";
 import Button from "../components/AddButton";
 import UserApi from "../api/api-impl";
 import AddUserModal from "../components/AddUserModal";

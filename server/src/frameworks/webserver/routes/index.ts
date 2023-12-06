@@ -1,8 +1,7 @@
 import { Application } from 'express';
-import { RedisClient } from '../../../app';
 import userRouter from './users';
 
-const routes = (app: Application, redisClient: RedisClient) => {
+const routes = (app: Application) => {
   
     app.use('/api/v1/users',userRouter())
 

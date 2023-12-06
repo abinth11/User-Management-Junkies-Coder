@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios"
-import { IUser } from "../../types/user"
+import { IUser } from "../types/user"
 
 abstract class User {
     protected Endpoints = {

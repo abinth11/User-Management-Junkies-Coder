@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: user_management_server
+    env_file:
+      - ./server/.env.production
+    networks:
+      - connection_network
+    restart: always
+    depends_on:
+      - mongodb
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: user_management_client
+    env_file:
+      - ./client/.env
+    depends_on:
+      - server
+    networks:
+      - connection_network
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  mongodb:
+    image: mongo:latest
+    container_name: user_management_mongodb
+    environment:
+      MONGO_INITDB_DATABASE: usermanagement
+    ports:
+      - "27017:27017"
+    networks:
+      - connection_network
+
+networks:
+  connection_network:
+    driver: bridge

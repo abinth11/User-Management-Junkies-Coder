@@ -4,7 +4,6 @@ import http from 'http';
 import serverConfig from './frameworks/webserver/server';
 import expressConfig from './frameworks/webserver/express';
 import routes from './frameworks/webserver/routes';
-import redisConnect from './frameworks/databases/redis/connection';
 import colors from 'colors';
 import errorHandlingMiddleware from './frameworks/webserver/middlewares/error-handler';
 
@@ -22,14 +21,11 @@ const server = http.createServer(app);
 //* connecting mongoDb 
 connectToMongoDb(); 
 
-//* connection to redis
-const redisClient = redisConnect().createRedisClient();
-
 //* express config connection
 expressConfig(app);
 
 //* routes for each endpoint
-routes(app, redisClient);
+routes(app);
 
 //* swagger docs
 swaggerDocs(app,ENVIRONMENT_VARIABLES.PORT);
@@ -46,4 +42,3 @@ app.all('*', (req, res, next: NextFunction) => {
 //* starting the server with server config
 serverConfig(server).startServer();
 
-export type RedisClient = typeof redisClient;
