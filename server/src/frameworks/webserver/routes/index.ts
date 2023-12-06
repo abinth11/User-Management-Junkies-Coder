@@ -1,10 +1,10 @@
 import { Application } from 'express';
-import { RedisClient } from '@src/app';
-
-// const API_BASE_URL = '/api/v1'
+import { RedisClient } from '../../../app';
+import userRouter from './users';
 
 const routes = (app: Application, redisClient: RedisClient) => {
   
+    app.use('/api/v1/users',userRouter())
 
 };
 

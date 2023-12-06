@@ -1,0 +1,142 @@
+openapi: 3.0.0
+info:
+  title: Your API
+  version: 1.0.0
+basePath: /api/v1
+tags:
+  - name: Users
+    description: The User API
+paths:
+  /api/v1/users/save:
+    post:
+      summary: Create user
+      description: Create a new user.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        201:
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaveUserResponse"
+        400:
+          description: Bad request, Invalid user input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        409:
+          description: Conflict, A user already exists with the given credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/users/list:
+    get:
+      summary: List users
+      description: List all users.
+      tags:
+        - Users
+      responses:
+        200:
+          description: Successfully listed all users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                 status:
+                  type: string
+                  example: success
+                message: 
+                  type: string
+                  example: successfully fetched users
+                data:
+                 type: array
+                 items:
+                  $ref: "#/components/schemas/User"
+
+        401:
+          description: Unauthorized, Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        _id:
+          type: string
+          description: The auto-generated id of the user
+          readOnly: true
+        name:
+          type: string
+          description: Name of the user
+          example: "John Doe"
+        email:
+          type: string
+          description: Email of the user
+          example: "johndoe@example.com"
+        password:
+          type: string
+          description: Password of the user
+          example: "John@1234"
+
+    ErrorResponse:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "An error occurred"
+
+    SaveUserResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Successfully created a new user"
+        data:
+          type: object 
+          properties:
+            accessToken:
+              type: string
+              example: "your-access-token"
+            refreshToken:
+              type: string
+              example: "your-refresh-token"
