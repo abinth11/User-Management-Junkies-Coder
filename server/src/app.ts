@@ -9,7 +9,9 @@ import colors from 'colors';
 import errorHandlingMiddleware from './frameworks/webserver/middlewares/error-handler';
 
 import AppError from './utils/app-error';
-
+import swaggerDocs from './adapters/docs/config';
+import ENVIRONMENT_VARIABLES from './config';
+ 
 colors?.enable();
 
 const app: Application = express();
@@ -18,7 +20,7 @@ const server = http.createServer(app);
 
 
 //* connecting mongoDb 
-connectToMongoDb();
+connectToMongoDb(); 
 
 //* connection to redis
 const redisClient = redisConnect().createRedisClient();
@@ -28,6 +30,10 @@ expressConfig(app);
 
 //* routes for each endpoint
 routes(app, redisClient);
+
+//* swagger docs
+swaggerDocs(app,ENVIRONMENT_VARIABLES.PORT);
+
 
 //* handles server side errors
 app.use(errorHandlingMiddleware);
