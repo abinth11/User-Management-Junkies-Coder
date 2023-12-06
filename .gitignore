@@ -1,0 +1,10 @@
+node_modules
+.env
+.env.development
+.env.production
+# /server/public
+/server/build
+/client/build
+dump.rdb
+
+yarn-error.log
