@@ -2,13 +2,15 @@ import { IUser } from "@src/types/user";
 class User {
     name: string;
     email: string;
-    password: string;
+    title: string;
+    role:string;
     createdAt: Date
 
-    constructor({ name,email,password}: IUser) {
+    constructor({ name,email,title,role}: IUser) {
         this.name = name
         this.email = email
-        this.password = password
+        this.title = title
+        this.role = role
         this.createdAt = new Date()
     }
 }

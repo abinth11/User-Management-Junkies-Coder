@@ -18,10 +18,13 @@ const userSchema = new Schema<IUser>({
       'Please enter a valid email'
     ]
   },
-  password: {
+  title: {
     type: String,
     required: true,
-    minlength: 8
+  },
+  role: {
+    type: String,
+    required: true,
   },
   createdAt: {
     type: Date,
